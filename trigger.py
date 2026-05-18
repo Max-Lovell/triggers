@@ -9,6 +9,8 @@ class Trigger:
         self.reset()
         self.write()
 
+    # -- line number handling ------------------------------------------
+
     def name2line(self, name: str):
         return self.names.index(name) + 1
 
@@ -23,6 +25,8 @@ class Trigger:
                 line = self.name2line(line)
             numbers.append(line)
         return numbers
+
+    # -- trigger control -------------------------------------------------
 
     def open(self, line):
         for l in self.get_line_numbers(line):
@@ -49,6 +53,8 @@ class Trigger:
         print('Open lines:', open_lines, "{:08b}".format(self.bitmask))
         return open_lines
 
+    # -- serial I/O ------------------------------------------------------
+
     def reset(self):
         self.port.write(b'RR')
 
@@ -61,13 +67,11 @@ class Trigger:
         self.port.close()
         print('Port is closed: ', not self.port.is_open)
 
+    # -- context manager support ----------------------------------------
 
-if __name__ == '__main__':
-    port = Trigger('COM4', names=['condition_1', 'condition_2', 'stim_1', 'stim_2'])
-    port.open(['condition_1', 'stim_1'])
-    port.close('stim_1')
-    port.open('stim_2')
-    port.close('stim_1')
-    port.open(8)
-    port.print_lines()
-    port.stop()
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.stop()
+        return False
