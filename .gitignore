@@ -1,2 +1,17 @@
 .venv
 .idea
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+
+# Test / tooling caches
+.pytest_cache/
+.coverage
+
+# Editor / OS files
+.vscode/
+.DS_Store
