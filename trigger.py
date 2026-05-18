@@ -56,10 +56,13 @@ class Trigger:
     # -- serial I/O ------------------------------------------------------
 
     def reset(self):
-        self.port.write(b'RR')
+        # b'' is identical to ''.encode() for something this simple.
+        self.port.write(b'RR')  # 'RR' is a device-specific command to reset.
 
     def write(self):
-        self.port.write(bytes([self.bitmask]))
+        # See documentation at the bottom here: https://www.blackboxtoolkit.com/support_usb_ttl_module.html
+        payload = format(self.bitmask, '02X')
+        self.port.write(payload.encode())
 
     def stop(self):
         print('Shutting down port')
