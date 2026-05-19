@@ -15,7 +15,7 @@ class Trigger:
         return self.names.index(name) + 1
 
     def line2name(self, line: int):
-        if len(self.names) > line: return ''
+        if len(self.names) > line: return 'unnamed'
         return self.names[line]
 
     def get_line_numbers(self, lines):
@@ -64,33 +64,27 @@ class Trigger:
         self.port.close()
         print('Port is closed: ', not self.port.is_open)
 
-        
+
     # -- display -------------------------------------------------
 
     def is_open(self, lines):
-        return self.check_lines(lines, True)
+        return all(self.status(lines))
 
     def is_closed(self, lines):
-        return self.check_lines(lines, False)
+        return not any(self.status(lines))
 
-    def check_lines(self, lines, check_open=True):
+    def status(self, lines=None):
+        if lines is None: lines = range(1, 9)
+
         matches = []
         for l in self.get_line_numbers(lines):
             new_bitmask = self.bitmask & ~(1 << l)
-            if check_open:
-                if self.bitmask == new_bitmask:
-                    matches.append(l)
-                    print(f"Line {str(l)} {self.line2name(l)} is closed")
-            else:
-                if self.bitmask != new_bitmask:
-                    matches.append(l)
-                    print(f"Line {str(l)} {self.line2name(l)} is open")
+            is_open = self.bitmask != new_bitmask
+            matches.append(is_open)
+            print(f"Line {str(l)} ({self.line2name(l)}) is {"open" if is_open else "closed"}")
+        return matches
 
-        if len(matches) == 0: return False
-        return True
-
-    def print_lines(self):
-        # print numbers
+    def get_open_lines(self):
         open_lines = []
         for l in range(8):
             new_bitmask = self.bitmask & ~(1 << l)
