@@ -5,7 +5,7 @@ Easier sending of digital triggers/event markers/TTL signals using the Serial (p
 ## Install
 
 ```bash
-pip install digitaltrigger
+pip install digital_trigger
 ```
 
 Requires Python 3.8+ and [`pyserial`](https://pypi.org/project/pyserial/) (installed automatically). 
@@ -73,7 +73,7 @@ port.stop()
 ### Python
 
 ```python
-from digitaltrigger import Trigger
+from digital_trigger import Trigger
 
 port = Trigger('COM4', names=['cond_1', 'cond_2', 'stim_1', 'stim_2'])
 

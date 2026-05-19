@@ -3,7 +3,7 @@ requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "digitaltrigger"
+name = "digital-trigger"
 version = "0.1.0"
 description = "Simple class for simplified pySerial interface for use in TTL event marking using e.g. PsychoPy."
 readme = "README.md"
