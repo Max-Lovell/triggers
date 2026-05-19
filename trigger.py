@@ -47,6 +47,24 @@ class Trigger:
         self.bitmask = 0
         self.write()
 
+    # -- serial I/O ------------------------------------------------------
+
+    def reset(self):
+        # b'' is identical to ''.encode() for something this simple.
+        self.port.write(b'RR')  # 'RR' is a device-specific command to reset.
+
+    def write(self):
+        # See documentation at the bottom here: https://www.blackboxtoolkit.com/support_usb_ttl_module.html
+        payload = format(self.bitmask, '02X')
+        self.port.write(payload.encode())
+
+    def stop(self):
+        print('Shutting down port')
+        self.reset()
+        self.port.close()
+        print('Port is closed: ', not self.port.is_open)
+
+        
     # -- display -------------------------------------------------
 
     def is_open(self, lines):
@@ -80,23 +98,6 @@ class Trigger:
                 open_lines.append(l + 1)
         print('Open lines:', open_lines, "{:08b}".format(self.bitmask))
         return open_lines
-
-    # -- serial I/O ------------------------------------------------------
-
-    def reset(self):
-        # b'' is identical to ''.encode() for something this simple.
-        self.port.write(b'RR')  # 'RR' is a device-specific command to reset.
-
-    def write(self):
-        # See documentation at the bottom here: https://www.blackboxtoolkit.com/support_usb_ttl_module.html
-        payload = format(self.bitmask, '02X')
-        self.port.write(payload.encode())
-
-    def stop(self):
-        print('Shutting down port')
-        self.reset()
-        self.port.close()
-        print('Port is closed: ', not self.port.is_open)
 
     # -- context manager support ----------------------------------------
 
