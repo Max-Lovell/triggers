@@ -1,6 +1,6 @@
 # For testing locally
 
-from trigger import Trigger
+from src.digital_trigger.trigger import Trigger
 
 port = Trigger(names=['stim_1', 'stim_2', 'stim_3'], simulate=True)
 
