@@ -35,17 +35,41 @@ class Trigger:
     def open(self, line):
         for l in self.get_line_numbers(line):
             self.bitmask |= (1 << (l - 1))
-        # self.write()
+        self.write()
 
     def close(self, line):
         for l in self.get_line_numbers(line):
             self.bitmask &= ~(1 << (l - 1))
         # self.port.flush()  # blocks until byte is sent - not necessary
-        # self.write()
+        self.write()
 
     def close_all(self):
         self.bitmask = 0
-        # self.write()
+        self.write()
+
+    # -- display -------------------------------------------------
+
+    def is_open(self, lines):
+        return self.check_lines(lines, True)
+
+    def is_closed(self, lines):
+        return self.check_lines(lines, False)
+
+    def check_lines(self, lines, check_open=True):
+        matches = []
+        for l in self.get_line_numbers(lines):
+            new_bitmask = self.bitmask & ~(1 << l)
+            if check_open:
+                if self.bitmask == new_bitmask:
+                    matches.append(l)
+                    print(f"Line {str(l)} {self.line2name(l)} is closed")
+            else:
+                if self.bitmask != new_bitmask:
+                    matches.append(l)
+                    print(f"Line {str(l)} {self.line2name(l)} is open")
+
+        if len(matches) == 0: return False
+        return True
 
     def print_lines(self):
         # print numbers
