@@ -100,3 +100,54 @@ Resources:
 - https://www.blackboxtoolkit.com/support_usb_ttl_module.html
 - https://www.blackboxtoolkit.com/docs/pdf/USBTTLv1r19.pdf
 - https://psychopy.org/developers/pluginDevGuide.html#plugindevguide
+
+# Dev notes
+
+#### build & upload
+Setup venv:
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip build twine pytest
+```
+
+re-run build:
+```
+rm -rf dist                # clear old builds so nothing stale is uploaded
+python3 -m build
+ls dist                    # confirm the new version number is shown
+twine upload --repository testpypi dist/*
+```
+
+#### test
+
+```
+cd /tmp
+rm -rf testenv
+python3 -m venv testenv
+source testenv/bin/activate
+pip install -i https://test.pypi.org/simple/ \
+    --extra-index-url https://pypi.org/simple/ \
+    digital-trigger==0.1.2          # match the version
+python -c "from digital_trigger import Trigger; t = Trigger(simulate=True, names=['stim_1']); t.open('stim_1'); print('ok', t.bitmask)"
+deactivate
+```
+
+To install from the test repo on a new computer:
+```
+pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ digital-trigger==0.1.2
+```
+
+Small script to check:
+```
+from digital_trigger import Trigger
+t = Trigger(simulate=True, names=['stim_1'])
+t.open('stim_1')
+print('ok', t.bitmask)
+```
+
+#### release
+```
+cd /path/to/project         # back to the project folder
+twine upload dist/*         # no --repository = real PyPI
+```
