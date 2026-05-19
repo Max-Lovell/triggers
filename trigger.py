@@ -14,6 +14,10 @@ class Trigger:
     def name2line(self, name: str):
         return self.names.index(name) + 1
 
+    def line2name(self, line: int):
+        if len(self.names) > line: return ''
+        return self.names[line]
+
     def get_line_numbers(self, lines):
         # Wrap a single item so everything below can assume an iterable.
         if isinstance(lines, (str, int)):
