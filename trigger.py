@@ -2,21 +2,33 @@ import serial
 
 
 class Trigger:
-    def __init__(self, port='COM3', baudrate=115200, timeout=0, names=None):
+    def __init__(self, port='COM3', baudrate=115200, timeout=0, names=None, simulate=False):
         self.bitmask = 0
         self.names = names
-        self.port = serial.Serial(port, baudrate, timeout=timeout)
-        self.reset()
-        self.write()
+        self.simulate = simulate
+        if not simulate:
+            self.port = serial.Serial(port, baudrate, timeout=timeout)
+            self.reset()
+            self.write()
 
     # -- line number handling ------------------------------------------
 
     def name2line(self, name: str):
         return self.names.index(name) + 1
 
-    def line2name(self, line: int):
-        if len(self.names) > line: return 'unnamed'
-        return self.names[line]
+    def line2name(self, line):
+        if self.names is None:
+            return ''
+        elif len(self.names) > line:
+            return 'unnamed'
+        elif isinstance(line, int):
+            line = [line]
+
+        line_names = []
+        for l in line:
+            line_names.append(self.names[l])
+
+        return line_names
 
     def get_line_numbers(self, lines):
         # Wrap a single item so everything below can assume an iterable.
@@ -50,21 +62,30 @@ class Trigger:
     # -- serial I/O ------------------------------------------------------
 
     def reset(self):
-        # b'' is identical to ''.encode() for something this simple.
-        self.port.write(b'RR')  # 'RR' is a device-specific command to reset.
+        self.bitmask = 0
+        if not self.simulate:
+            # b'' is identical to ''.encode() for something this simple.
+            self.port.write(b'RR')  # 'RR' is a device-specific command to reset.
+        else:
+            print('Port reset')
 
     def write(self):
         # See documentation at the bottom here: https://www.blackboxtoolkit.com/support_usb_ttl_module.html
         payload = format(self.bitmask, '02X')
-        self.port.write(payload.encode())
+        if not self.simulate:
+            self.port.write(payload.encode())
+        else:
+            print('Hex code written: ' + payload)
+            # self.open_lines()
 
     def stop(self):
         print('Shutting down port')
-        self.reset()
-        self.port.close()
-        print('Port is closed: ', not self.port.is_open)
+        if not self.simulate:
+            self.reset()
+            self.port.close()
+            print('Port is closed: ', not self.port.is_open)
 
-
+    # -- OPTIONAL EXTRAS -------------------------------------------------
     # -- display -------------------------------------------------
 
     def is_open(self, lines):
@@ -74,24 +95,23 @@ class Trigger:
         return not any(self.status(lines))
 
     def status(self, lines=None):
-        if lines is None: lines = range(1, 9)
+        if lines is None:
+            lines = range(1, 9)
 
         matches = []
         for l in self.get_line_numbers(lines):
-            new_bitmask = self.bitmask & ~(1 << l)
-            is_open = self.bitmask != new_bitmask
-            matches.append(is_open)
-            print(f"Line {str(l)} ({self.line2name(l)}) is {"open" if is_open else "closed"}")
+            is_open = self.bitmask & (1 << (l - 1))
+            matches.append(bool(is_open))  # Unsure if should convert to bool or not?
+            # print(f"Line {str(l)} is {'open' if is_open else 'closed'} {self.line2name(l)}")
         return matches
 
-    def get_open_lines(self):
-        open_lines = []
+    def open_lines(self):
+        lines = []
         for l in range(8):
-            new_bitmask = self.bitmask & ~(1 << l)
-            if self.bitmask != new_bitmask:
-                open_lines.append(l + 1)
-        print('Open lines:', open_lines, "{:08b}".format(self.bitmask))
-        return open_lines
+            if self.bitmask & (1 << l):
+                lines.append(l + 1)
+        print('Open lines:', lines, "{:08b}".format(self.bitmask))
+        return lines
 
     # -- context manager support ----------------------------------------
 
