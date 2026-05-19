@@ -1,6 +1,5 @@
 import serial
 
-
 class Trigger:
     def __init__(self, port='COM3', baudrate=115200, timeout=0, names=None, simulate=False):
         self.bitmask = 0
@@ -13,7 +12,9 @@ class Trigger:
 
     # -- line number handling ------------------------------------------
 
-    def name2line(self, name: str):
+    def name2line(self, name):
+        if self.names is None:
+            raise ValueError("No line names were set. Pass names=[...] to Trigger(), or use line numbers.")
         return self.names.index(name) + 1
 
     def get_line_numbers(self, lines):
@@ -25,6 +26,10 @@ class Trigger:
         for line in lines:
             if isinstance(line, str):
                 line = self.name2line(line)
+            else:
+                line = int(line)
+            if not 1 <= line <= 8:
+                raise ValueError("Line number must be between 1 and 8")
             numbers.append(line)
         return numbers
 
@@ -85,7 +90,7 @@ class Trigger:
             lines = range(1, 9)
 
         matches = []
-        for l in self.get_line_numbers(lines):
+        for l in self.get_line_numbers(lines): # simplify
             is_open = self.bitmask & (1 << (l - 1))
             matches.append(bool(is_open))  # Unsure if should convert to bool or not?
             # print(f"Line {str(l)} is {'open' if is_open else 'closed'} {self.line2name(l)}")
@@ -101,16 +106,17 @@ class Trigger:
 
     def line2name(self, line):
         if self.names is None:
-            return ''
-        elif len(self.names) > line:
-            return 'unnamed'
-        elif isinstance(line, int):
+            return []
+        if isinstance(line, int):
             line = [line]
 
         line_names = []
         for l in line:
-            line_names.append(self.names[l])
-
+            l = int(l) #just incase it's a numpy int
+            if 1 <= l <= len(self.names):
+                line_names.append(self.names[l - 1])
+            else:
+                line_names.append('unnamed')
         return line_names
 
     # -- context manager support ----------------------------------------
