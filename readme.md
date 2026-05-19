@@ -31,8 +31,8 @@ Consider managing the triggers using a 'trigger_line' variable in your condition
 #### Before Experiment
 
 ```
-from digital_trigger import DigitalTrigger
-port = DigitalTrigger('COM4', names=['cond_1', 'cond_2', 'stim_1', 'stim_2'])
+from digital_trigger import Trigger
+port = Trigger('COM4', names=['cond_1', 'cond_2', 'stim_1', 'stim_2'])
 ```
 
 Note you can only do this once per experiment. 
