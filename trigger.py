@@ -16,20 +16,6 @@ class Trigger:
     def name2line(self, name: str):
         return self.names.index(name) + 1
 
-    def line2name(self, line):
-        if self.names is None:
-            return ''
-        elif len(self.names) > line:
-            return 'unnamed'
-        elif isinstance(line, int):
-            line = [line]
-
-        line_names = []
-        for l in line:
-            line_names.append(self.names[l])
-
-        return line_names
-
     def get_line_numbers(self, lines):
         # Wrap a single item so everything below can assume an iterable.
         if isinstance(lines, (str, int)):
@@ -112,6 +98,20 @@ class Trigger:
                 lines.append(l + 1)
         print('Open lines:', lines, "{:08b}".format(self.bitmask))
         return lines
+
+    def line2name(self, line):
+        if self.names is None:
+            return ''
+        elif len(self.names) > line:
+            return 'unnamed'
+        elif isinstance(line, int):
+            line = [line]
+
+        line_names = []
+        for l in line:
+            line_names.append(self.names[l])
+
+        return line_names
 
     # -- context manager support ----------------------------------------
 
