@@ -30,9 +30,6 @@ dependencies = [
     "pyserial>=3.0",
 ]
 
-[project.optional-dependencies]
-test = ["pytest"]
-
 [project.urls]
 Homepage = "https://github.com/Max-Lovell/triggers"
 Issues = "https://github.com/Max-Lovell/triggers/issues"
