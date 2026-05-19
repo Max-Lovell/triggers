@@ -1,6 +1,6 @@
 # digital-trigger
 
-Easier sending of digital triggers/event markers/TTL signals using the Serial (pySerial) package a Black Box Toolkit USB TTL module in python and PsychoPy.
+Easier sending of digital triggers/event markers/TTL signals using the Serial (pySerial) package with a Black Box Toolkit USB TTL module in Python and PsychoPy.
 
 ## Install
 
@@ -19,6 +19,8 @@ To find COM port number:
 - On Mac run `ls /dev/cu.*` in Terminal and look for something like /dev/cu.usbserial-XXXX or /dev/cu.usbmodemXXXX — use the cu.* name, not tty.*. 
 - On Linux, run ls `/dev/ttyUSB* /dev/ttyACM*` — USB-serial adapters are usually `ttyUSB0`
 - Arduino-style boards `ttyACM0; dmesg | tail` right after plugging in shows the assigned name, and you may need to add yourself to the dialout group for permission.
+
+Make sure your COM port is set up with a latency of 1ms (or lower) and Baudrate of 115200. This can be done under Device Manager > COM port > Advanced on Windows.
 
 ## Usage
 
@@ -81,7 +83,8 @@ port.open('stim_1')          # turn a line on  (by name)
 port.open([1, 'cond_2'])     # turn several on (numbers and names mixed)
 port.close('stim_1')         # turn one off
 port.close_all()             # turn everything off
-port.print_lines()           # -> [2] and prints the bitmask
+port.open_lines()            # index of open lines and prints the bitmask
+port.status()                # list of bools for each port if open or closed
 
 port.stop()                  # reset all lines and close the port
 ```
@@ -89,8 +92,8 @@ port.stop()                  # reset all lines and close the port
 Or as a context manager, which closes the port for you:
 
 ```python
-with Trigger('COM4', names=['stim_1']) as trig:
-    trig.open('stim_1')
+with Trigger('COM4', names=['stim_1']) as port:
+    port.open('stim_1')
 ```
 
 Resources:
