@@ -119,7 +119,16 @@ class Trigger:
                 line_names.append('unnamed')
         return line_names
 
+    def hex(self):
+        return f"{self.bitmask:02X}"
+
+    def binary(self):
+        return f"{self.bitmask:08b}"
+
     # -- context manager support ----------------------------------------
+
+    def __repr__(self):
+        return f"Trigger(bitmask={self.binary()}, open_lines={self.open_lines()})"
 
     def __enter__(self):
         return self
