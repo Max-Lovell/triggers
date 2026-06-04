@@ -116,8 +116,10 @@ re-run build:
 rm -rf dist                # clear old builds so nothing stale is uploaded
 python3 -m build
 ls dist                    # confirm the new version number is shown
-twine upload --repository testpypi dist/*
 ```
+
+Push to PyPi test with `twine upload --repository testpypi dist/*`
+Push to PyPi with `twine upload dist/*`
 
 #### test
 
