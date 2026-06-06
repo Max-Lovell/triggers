@@ -167,5 +167,12 @@ print('ok', t.bitmask)
 #### release
 ```
 cd /path/to/project         # back to the project folder
+rm -rf dist
+python -m build
 twine upload dist/*         # no --repository = real PyPI
 ```
+OR github:
+Releases > Draft a new release.
+Choose a tag: type v0.1.3, click "Create new tag: v0.1.3 on publish".
+Title: v0.1.3. Description: brief notes on what changed.
+Click Publish release.
