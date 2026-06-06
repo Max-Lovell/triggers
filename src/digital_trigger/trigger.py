@@ -68,8 +68,8 @@ class Trigger:
         if not self.simulate:
             self.port.write(payload.encode())
         else:
+            self.open_lines()
             print('Hex code written: ' + payload)
-            # self.open_lines()
 
     def stop(self):
         if self.simulate or not hasattr(self, 'port') or not self.port.is_open:
@@ -130,7 +130,7 @@ class Trigger:
         return f"{self.bitmask:08b}"
 
     # -- psychopy --------------------------------------------------------
-    
+
     def sync_to_component(self, line, component, win):
         # TODO: this only really works with a single line due to is_closed() etc, so consider a rewrite there
         # see https://github.com/psychopy/psychopy/blob/dev/psychopy/constants.py
