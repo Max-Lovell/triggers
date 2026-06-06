@@ -159,7 +159,7 @@
         <Param val="" valType="extendedCode" updates="constant" name="Begin JS Routine"/>
         <Param val="" valType="extendedCode" updates="constant" name="Begin Routine"/>
         <Param val="Py" valType="str" updates="None" name="Code Type"/>
-        <Param val="if image.status == STARTED and port.is_closed(condition):&amp;#10;    win.callOnFlip(port.open, condition)&amp;#10;&amp;#10;if image.status == FINISHED and port.is_open(condition):&amp;#10;    win.callOnFlip(port.close, condition)" valType="extendedCode" updates="constant" name="Each Frame"/>
+        <Param val="port.sync_to_component(condition, image, win)" valType="extendedCode" updates="constant" name="Each Frame"/>
         <Param val="" valType="extendedCode" updates="constant" name="Each JS Frame"/>
         <Param val="port.stop()" valType="extendedCode" updates="constant" name="End Experiment"/>
         <Param val="" valType="extendedCode" updates="constant" name="End JS Experiment"/>
