@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "digital-trigger"
-version = "0.1.2"
+version = "0.1.3"
 description = "Simple class for simplified pySerial interface for use in TTL event marking using e.g. PsychoPy."
 readme = "README.md"
 requires-python = ">=3.8"
