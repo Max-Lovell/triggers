@@ -1,4 +1,5 @@
 import serial
+import atexit
 
 class Trigger:
     def __init__(self, port='COM3', baudrate=115200, timeout=0, names=None, simulate=False):
@@ -9,6 +10,7 @@ class Trigger:
             self.port = serial.Serial(port, baudrate, timeout=timeout)
             self.reset()
             self.write()
+            atexit.register(self.stop)
 
     # -- line number handling ------------------------------------------
 
