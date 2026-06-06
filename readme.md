@@ -41,6 +41,11 @@ if image.status == FINISHED and port.is_open(condition):
     win.callOnFlip(port.close, condition)
 ```
 
+OR, more simply:
+```
+port.sync_to_component(condition, image, win)
+```
+
 #### End Experiment
 ```
 port.stop()
