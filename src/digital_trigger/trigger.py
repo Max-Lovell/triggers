@@ -80,6 +80,15 @@ class Trigger:
         print('Port is closed: ', not self.port.is_open)
 
     # -- OPTIONAL EXTRAS -------------------------------------------------
+    def sync_to_component(self, line, component, win):
+        # TODO: this only really works with a single line due to is_closed() etc, so consider a rewrite there
+        # see https://github.com/psychopy/psychopy/blob/dev/psychopy/constants.py
+        # consider lazy import of `from psychopy.constants import STARTED, FINISHED` instead of ints
+        if component.status == 1 and self.is_closed(line):
+            win.callOnFlip(self.open, line)
+        elif component.status == -1 and self.is_open(line):
+            win.callOnFlip(self.close, line)
+
     # -- display -------------------------------------------------
 
     def is_open(self, lines):
