@@ -80,14 +80,6 @@ class Trigger:
         print('Port is closed: ', not self.port.is_open)
 
     # -- OPTIONAL EXTRAS -------------------------------------------------
-    def sync_to_component(self, line, component, win):
-        # TODO: this only really works with a single line due to is_closed() etc, so consider a rewrite there
-        # see https://github.com/psychopy/psychopy/blob/dev/psychopy/constants.py
-        # consider lazy import of `from psychopy.constants import STARTED, FINISHED` instead of ints
-        if component.status == 1 and self.is_closed(line):
-            win.callOnFlip(self.open, line)
-        elif component.status == -1 and self.is_open(line):
-            win.callOnFlip(self.close, line)
 
     # -- display -------------------------------------------------
 
@@ -136,6 +128,38 @@ class Trigger:
 
     def binary(self):
         return f"{self.bitmask:08b}"
+
+    # -- psychopy --------------------------------------------------------
+    
+    def sync_to_component(self, line, component, win):
+        # TODO: this only really works with a single line due to is_closed() etc, so consider a rewrite there
+        # see https://github.com/psychopy/psychopy/blob/dev/psychopy/constants.py
+        # consider lazy import of `from psychopy.constants import STARTED, FINISHED` instead of ints
+        if component.status == 1 and self.is_closed(line):
+            win.callOnFlip(self.open, line)
+        elif component.status == -1 and self.is_open(line):
+            win.callOnFlip(self.close, line)
+
+    def watch(self, line, component):
+        # Register a component whose lifecycle should drive a trigger line.
+        # line opens when the component starts and closes when it finishes
+        # call self.tick(win) each frame to run the logic.
+        # Call this in the Begin Routine tab for each pairing
+        if not hasattr(self, '_watched'):
+            self._watched = []
+        self._watched.append((line, component))
+
+    def unwatch_all(self):
+        # Clears all registered (line, component) pairs.
+        # Call this in Begin Routine - is recommended
+        self._watched = []
+
+    def tick(self, win):
+        # Call in Each Frame: checks all watched components and fire triggers on the next flip.
+        if not hasattr(self, '_watched'):
+            return
+        for line, component in self._watched:
+            self.sync_to_component(line, component, win)
 
     # -- context manager support ----------------------------------------
 
