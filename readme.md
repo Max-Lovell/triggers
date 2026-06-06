@@ -8,11 +8,11 @@ Easier sending of digital triggers/event markers/TTL signals using the Serial (p
 pip install digital_trigger
 ```
 
-Requires Python 3.8+ and [`pyserial`](https://pypi.org/project/pyserial/) (installed automatically). 
+Requires Python 3.8+ and [`pyserial`](https://pypi.org/project/pyserial/) (installed automatically in PsychoPy). 
 
 In PsychoPy you can install packages in the Builder GUI by going to: 
-Tools > Plugins and packages manager > Packages > Open PIP terminal, and run  `pip install digital-trigger`
-
+Tools > Plugins and packages manager > Packages > Open PIP terminal, and run `install digital-trigger`,
+or `pip install digital-trigger` in older versions. If you seean error, check installation notes below.
 
 ## Usage
 
