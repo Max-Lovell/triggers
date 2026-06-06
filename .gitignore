@@ -1,6 +1,10 @@
 .venv
 .idea
 
+#PsychoPy
+/example/data
+/example/*_lastrun.py
+
 # Build artifacts
 build/
 dist/
