@@ -70,11 +70,12 @@ class Trigger:
             # self.open_lines()
 
     def stop(self):
+        if self.simulate or not hasattr(self, 'port') or not self.port.is_open:
+            return  # already stopped, or never opened
         print('Shutting down port')
-        if not self.simulate:
-            self.reset()
-            self.port.close()
-            print('Port is closed: ', not self.port.is_open)
+        self.reset()
+        self.port.close()
+        print('Port is closed: ', not self.port.is_open)
 
     # -- OPTIONAL EXTRAS -------------------------------------------------
     # -- display -------------------------------------------------
