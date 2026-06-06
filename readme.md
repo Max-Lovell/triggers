@@ -127,6 +127,8 @@ source .venv/bin/activate
 pip install --upgrade pip build twine pytest
 ```
 
+run test.py from root with `python test.py`
+
 re-run build:
 ```
 rm -rf dist                # clear old builds so nothing stale is uploaded
