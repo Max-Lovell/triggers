@@ -127,6 +127,12 @@ source .venv/bin/activate
 pip install --upgrade pip build twine pytest
 ```
 
+activate venv on new machine:
+```
+source .venv/bin/activate
+pip install -e .
+```
+
 run test.py from root with `python test.py`
 
 re-run build:
