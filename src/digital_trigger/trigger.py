@@ -64,12 +64,10 @@ class Trigger:
 
     def write(self):
         # See documentation at the bottom here: https://www.blackboxtoolkit.com/support_usb_ttl_module.html
-        payload = format(self.bitmask, '02X')
         if not self.simulate:
-            self.port.write(payload.encode())
+            self.port.write(self.hex().encode())
         else:
             self.open_lines()
-            print('Hex code written: ' + payload)
 
     def stop(self):
         if self.simulate or not hasattr(self, 'port') or not self.port.is_open:
@@ -105,7 +103,7 @@ class Trigger:
         for l in range(8):
             if self.bitmask & (1 << l):
                 lines.append(l + 1)
-        print('Open lines:', lines, "{:08b}".format(self.bitmask))
+        print(f"Open lines: {lines}, binary: {self.binary()}, Hex: {self.hex()}")
         return lines
 
     def line2name(self, line):
