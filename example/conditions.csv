@@ -1,3 +1,7 @@
-﻿condition
-nature
-urban
+condition,image
+nature,stimuli/nature/N_01.jpg
+nature,stimuli/nature/N_02.jpg
+nature,stimuli/nature/N_03.jpg
+urban,stimuli/urban/U_01.jpg
+urban,stimuli/urban/U_02.jpg
+urban,stimuli/urban/U_03.jpg
